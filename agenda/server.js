@@ -71,9 +71,44 @@ app.put('/:id', async (req, res) => {
     var temp = [];
 
     const col = Object.keys(contatoAlterar);
-    col.forEach((c, i) => {
-        temp.push(c + ' = $' + (i + 1));
-    });
+    col.forEach( ( c, i ) => {
+        temp.push( c + ' = $' + (i + 1) );
+    })
+
+    sqlTemp.push(temp.join(', '));
+    sqlTemp.push('WHERE id = ' + id + ' RETURNING *');
+    const sql = sqlTemp.join(' ');
+
+    //Obtem os valores dos atributos
+    var atributos = col.map( (c) => {
+        return contatoAlterar[c];
+    })
+
+    try{
+        const r = await db.query(sql, atributos);
+        res.status(200).send(r.rows);
+    }
+    catch(e){
+        console.log(e);
+        res.status(500).send({erro: 'Um erro ocorreu'});
+     }    
 });
+
+//REMOVE UM CONTATO
+app.delete('/:id', async (req, res) => {
+    const id = req.params.id;
+
+    try{
+        const sql = 'DELETE FROM contatos WHERE id = $1';
+        const r = db.query(sql, [id]);
+        res.status(200).send({mensagem: 'Contato removido'});
+    }
+    catch(e){
+        console.log(e);
+        res.status(500).send({erro: 'Um erro ocorreu'});
+     }    
+
+});
+
 
 app.listen(process.env.APP_PORT, () => console.log('AGENDA - API WEB executando'));

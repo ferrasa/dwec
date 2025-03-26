@@ -2,7 +2,6 @@
 
 import express from 'express';
 import dotenv from 'dotenv';
-import db from './src/db/db.js'; // Importa a configuração do banco de dados
 import contatoRoutes from './src/routes/contatoRoutes.js'; // Importa as rotas de contatos
 
 // Ativa arquivo de configuração

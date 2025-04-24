@@ -7,6 +7,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -81,6 +82,30 @@ public class ArtigoController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
     }
+
+    /*
+     * DEL /:id : remover artigo dado um id
+     */
+    @DeleteMapping("/{id}")
+    public ResponseEntity<HttpStatus> deleteArtigo(@PathVariable("id") long id){
+        try {
+            rep.deleteById(id);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    
+    }
+
+
+    /*
+     * DEL / : remover todos os artigos
+     */
+
+
+     /*
+     * GET /publicado : buscar por artigos publicados 
+     */
 
 
 }

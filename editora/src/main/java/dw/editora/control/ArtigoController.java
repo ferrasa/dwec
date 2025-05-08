@@ -33,7 +33,7 @@ public class ArtigoController {
     public  ResponseEntity< List<Artigo> > getAllArtigos(@RequestParam(required = false) String titulo){
         try {
             List<Artigo> la = new ArrayList<Artigo>();
-
+            
             if (titulo == null)
                 rep.findAll().forEach(la::add);
             else
@@ -98,14 +98,40 @@ public class ArtigoController {
     }
 
 
-    /*
+        /*
      * DEL / : remover todos os artigos
      */
+    @DeleteMapping("/")
+    public ResponseEntity<HttpStatus> deleteAllArtigo()
+    {
+        try {
+            rep.deleteAll();
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }        
+    }
 
-
+    
      /*
      * GET /publicado : buscar por artigos publicados 
      */
+    @GetMapping("/publicado")
+    public  ResponseEntity< List<Artigo> > getAllPublicado(){
+        try {
+            List<Artigo> la = new ArrayList<Artigo>();
+
+            rep.findByPublicado(true).forEach(la::add);
+
+            if (la.isEmpty())
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>(la, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+    
 
 
 }

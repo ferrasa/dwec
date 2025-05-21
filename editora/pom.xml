@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>3.4.4</version>
+		<version>3.4.5</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>dw</groupId>
@@ -13,6 +13,8 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<name>editora</name>
 	<description>Exemplo projeto editora</description>
+	<!-- For external server -->
+	<!-- <packaging>war</packaging> -->
 	<url/>
 	<licenses>
 		<license/>
@@ -38,7 +40,12 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
-
+		<!-- For external server -->
+		<!-- <dependency>
+        	<groupId>org.springframework.boot</groupId>
+        	<artifactId>spring-boot-starter-tomcat</artifactId>
+        	<scope>provided</scope> 
+    	</dependency> -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-devtools</artifactId>

@@ -50,6 +50,25 @@ public class ArtigoController {
     }
 
     /*
+     * GET /:id : obter um artigo dado um id
+     */
+    @GetMapping("/{id}")
+    public ResponseEntity<Artigo> getArtigo(@PathVariable("id") long id)
+    {
+        Optional<Artigo> data = rep.findById(id);
+
+        if (data.isPresent())
+        {
+            Artigo a = data.get();
+            return new ResponseEntity<>(a, HttpStatus.OK);
+        }
+        else
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
+    }
+
+
+    /*
      * POST / : criar um artigo
      */
     @PostMapping("/")

@@ -1,4 +1,4 @@
-# Desenvolvimento Web - Engenharia de Software
+# Desenvolvimento Web - Engenharia de Computação
 
 ![Logo UEPG](http://136.248.68.47/logouepg.png)
 
@@ -11,9 +11,9 @@ Este repositório armazena todos os códigos-fonte, projetos e atividades práti
 ## 🎓 Informações da Disciplina
 
 *   **Universidade:** Universidade Estadual de Ponta Grossa (UEPG)
-*   **Curso:** Engenharia de Software
+*   **Curso:** Engenharia de Computação
 *   **Disciplina:** Desenvolvimento Web
-*   **Ano/Semestre:** [2025/2]
+*   **Ano/Semestre:** [2026/1]
 
 ---
 

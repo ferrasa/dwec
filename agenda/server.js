@@ -51,4 +51,71 @@ app.post('/', async (req, resp) => {
 
 });
 
+//BUSCA UM CONTATO DADO UM ID
+app.get('/:id', async (req, res) => {
+    const id = req.params.id;
+    try {
+        const sql = 'SELECT * FROM contato WHERE id = ' + id;
+        const contatos = await db.query(sql);
+            
+        res.status(200).send(contatos.rows);
+    }
+    catch(e){
+        console.log(e);
+        res.status(500).send({erro: 'Um erro ocorreu'});
+    }    
+    
+});
+
+app.put('/:id', async (req, res) => {
+    const id = req.params.id;
+    const contatoAlterar = req.body;
+
+    //Criar String e UPDATE
+    //Ex.: UPDATE contato SET nome = $1, telefone $2 WHERE id = 1
+    var sqlTEmp = ['UPDATE contato'];
+    sqlTEmp.push('SET');
+
+    const col = Object.keys(contatoAlterar);
+    var temp = [];
+    col.forEach((a, i) => {
+        temp.push(a + ' = $' + (i + 1));
+    });
+
+    sqlTEmp.push(temp.join(', '));
+    sqlTEmp.push('WHERE id = '+id+' RETURNING *');
+    const sql = sqlTEmp.join(' ');
+
+    //Obtem calores de atributos
+    var atributos = col.map( (a) => {
+        return contatoAlterar[a];
+    });
+
+    try{
+        const r = await db.query(sql, atributos);
+        res.status(200).send(r.rows);
+
+    } catch (e){
+        console.log(e);
+        res.status(500).send({erro: 'Ocorreu um erro'});
+
+    }
+});
+
+//REMOVE UM CONTATO
+app.delete('/:id', async (req, res) => {
+    const id = req.params.id;
+
+    try{
+        const sql = 'DELETE FROM contato WHERE id = $1';
+        const r = db.query(sql, [id]);
+        res.status(200).send({mensagem: 'Contato removido'});
+    }
+    catch(e){
+        console.log(e);
+        res.status(500).send({erro: 'Um erro ocorreu'});
+     }    
+
+});
+
 app.listen(process.env.APP_PORT, () => console.log('AGENDA - API WEB executando'));

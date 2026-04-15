@@ -7,6 +7,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,7 +20,6 @@ import dw.editora.model.Artigo;
 import dw.editora.repository.ArtigoRepository;
 
 
-
 @RestController
 public class ArtigoController {
     @Autowired
@@ -29,59 +29,52 @@ public class ArtigoController {
      * GET / : listar todos os artigos
      */
     @GetMapping("/")
-    public ResponseEntity< List<Artigo> >  getAllArtigos(@RequestParam(required = false) String titulo){
+    public  ResponseEntity< List<Artigo> > getAllArtigos(@RequestParam(required = false) String titulo){
         try {
             List<Artigo> la = new ArrayList<Artigo>();
-
+            
             if (titulo == null)
-                //retorna todos os artigos do BD
                 rep.findAll().forEach(la::add);
             else
-                // retorna artigos aproximados por titulo
                 rep.findByTituloContainingIgnoreCase(titulo).forEach(la::add);
 
             if (la.isEmpty())
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             return new ResponseEntity<>(la, HttpStatus.OK);
-
         } catch (Exception e) {
-            // TODO: handle exception
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity< Artigo >  getArtigo(@PathVariable("id") long id){
-        try {
-            
-            Optional<Artigo> data =  rep.findById(id);
-
-            if (data.isPresent())
-            {
-                Artigo a = data.get();
-                return new ResponseEntity<>(a, HttpStatus.OK);
-            }
-            else
-                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-
-        } catch (Exception e) {
-            // TODO: handle exception
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     /*
-     * POST / : salvar um artigo BD
+     * GET /:id : obter um artigo dado um id
+     */
+    @GetMapping("/{id}")
+    public ResponseEntity<Artigo> getArtigo(@PathVariable("id") long id)
+    {
+        Optional<Artigo> data = rep.findById(id);
+
+        if (data.isPresent())
+        {
+            Artigo a = data.get();
+            return new ResponseEntity<>(a, HttpStatus.OK);
+        }
+        else
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
+    }
+
+    /*
+     * POST / : criar um artigo
      */
     @PostMapping("/")
-    public ResponseEntity<Artigo> createArtigo(@RequestBody Artigo ar)
-    {
+    public ResponseEntity<Artigo> createArtigo(@RequestBody Artigo ar) {
         try {
             Artigo a = rep.save(new Artigo(ar.getTitulo(), ar.getResumo(), ar.isPublicado()));
             return new ResponseEntity<>(a, HttpStatus.CREATED);
+
         } catch (Exception e) {
-            // TODO: handle exception
-             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -107,5 +100,52 @@ public class ArtigoController {
 
     }
 
+    /*
+     * DEL /:id : remover artigo dado um id
+     */
+    @DeleteMapping("/{id}")
+    public ResponseEntity<HttpStatus> deleteArtigo(@PathVariable("id") long id){
+        try {
+            rep.deleteById(id);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    
+    }
+
+    /*
+     * DEL / : remover todos os artigos
+     */
+    @DeleteMapping("/")
+    public ResponseEntity<HttpStatus> deleteAllArtigo()
+    {
+        try {
+            rep.deleteAll();
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }        
+    }
+    
+    /*
+     * GET /publicado : buscar por artigos publicados 
+     */
+    @GetMapping("/publicado")
+    public  ResponseEntity< List<Artigo> > getAllPublicado(){
+        try {
+            List<Artigo> la = new ArrayList<Artigo>();
+
+            rep.findByPublicado(true).forEach(la::add);
+
+            if (la.isEmpty())
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>(la, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+    
 
 }
